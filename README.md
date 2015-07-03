@@ -2,7 +2,7 @@
 
 Implementation of the Maker Den Project and schema streaming sensor data over MQTT
 
-This project implemented on the NodeMCU V2.0 (also know as V1.0) on the ESP8266, ESP-12E chip using the Arduino Firmware
+This project implemented on the NodeMCU V2.0 (also known as V1.0) on the ESP8266, ESP-12E chip using the Arduino Firmware
 
 ##Physical Board
 

@@ -39,10 +39,13 @@ IPAddress mqttBroker(192, 168, 1, 17); //on RPiB
 PubSubClient client(wclient, mqttBroker); 
 
 int builtin_led = BUILTIN_LED;  // On when publishing over mqtt
+int publishLed = D1;
 
 void setup() {
   pinMode(builtin_led, OUTPUT);
+  pinMode(publishLed, OUTPUT);
   digitalWrite(builtin_led, LOW); 
+  digitalWrite(publishLed, LOW); 
   
   Serial.begin(115200);
   delay(10);
@@ -106,6 +109,7 @@ void Publish(double reading, char * type, char * unit) {
   JsonObject& root = jsonBuffer.createObject();
   
   digitalWrite(builtin_led, LOW); 
+  digitalWrite(publishLed, HIGH); 
   
   String TopicName = mqttNamespace + (String)type;
   char Topic[50];
@@ -127,6 +131,7 @@ void Publish(double reading, char * type, char * unit) {
   
   client.publish(Topic, buffer);    //http://knolleary.net/arduino-client-for-mqtt/api/#publish
   digitalWrite(builtin_led, HIGH);
+  digitalWrite(publishLed, LOW); 
 
 }
 

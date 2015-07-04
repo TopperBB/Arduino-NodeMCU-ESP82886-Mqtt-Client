@@ -14,46 +14,49 @@
 #include <PubSubClient.h>   // https://github.com/Imroy/pubsubclient
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
+#include <EEPROM.h>
 
 
 //Network
 WiFiClient wclient; 
 WiFiUDP udp; // NTP Time service
 
-const char* ssid     = "NCW";
-const char* password = "malolos5459";
+const char* ssid     = "";
+const char* password = "";
+const char* mqtt = "gloveboxAE.cloudapp.net";
+const char* devid = "node1";
+
 
 char isoTime[20];
 
 // MQTT Related
-#define BufferLen 256
+const int BufferLen = 256;
 char buffer[BufferLen];
-String mqttNamespace = "gb/NodeMCU/";
+String mqttNamespace = "gb/";
 
 int length;
 int sendCount = 0;
 
-//IPAddress mqttBroker(191, 239, 64, 146); //gloveboxae
-IPAddress mqttBroker(192, 168, 1, 17); //on RPiB
+IPAddress mqttBroker(191, 239, 72, 14); //gloveboxae
+//IPAddress mqttBroker(192, 168, 1, 17); //on RPiB
 
-PubSubClient client(wclient, mqttBroker); 
+PubSubClient client(wclient, mqtt);
 
 int builtin_led = BUILTIN_LED;  // On when publishing over mqtt
 int publishLed = D1;
 
 void setup() {
+  Serial.begin(115200);
+  delay(50);
+  
+  getConfigFromEEPROM();
+
+  mqttNamespace += String(devid) + "/";
+  
   pinMode(builtin_led, OUTPUT);
   pinMode(publishLed, OUTPUT);
   digitalWrite(builtin_led, LOW); 
   digitalWrite(publishLed, LOW); 
-  
-  Serial.begin(115200);
-  delay(10);
-
-  Serial.println();
-  Serial.println();
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
 
 //  client.set_callback(callback);
   
@@ -76,7 +79,7 @@ void setup() {
 void loop() {
   if (!client.connected()) {
     Serial.println("mqtt connect");
-      client.connect("arduinoMega");
+      client.connect(String(ESP.getChipId()));
       // client.subscribe(TOPIC);
       delay(500);      
   }
@@ -87,13 +90,44 @@ void loop() {
 
   client.loop();
 
-  delay(500);
+  delay(400);
+}
+
+void getConfigFromEEPROM(){
+  EEPROM.begin(512);
+  
+  const int BUFFER_SIZE = JSON_OBJECT_SIZE(4) + JSON_ARRAY_SIZE(0);
+  StaticJsonBuffer<BUFFER_SIZE> jsonBuffer;
+  int address = 2;
+  
+  length = word(EEPROM.read(0), EEPROM.read(1));
+  
+  for (address = 2; address < length + 2; address++) {
+    buffer[address-2] = EEPROM.read(address);
+  }
+  buffer[address-2] = '\0';
+  
+  JsonObject& root = jsonBuffer.parseObject(buffer);
+  if (!root.success())
+  {
+    Serial.println("parseObject() failed");
+    return;
+  }
+
+  ssid = root["SSID"];
+  password = root["Password"];
+  mqtt = root["Mqtt"];
+  devid = root["DevId"];
 }
 
 void GetLightReading() {
-//  LedBlink(builtin_led);
+  digitalWrite(publishLed, HIGH); 
   int r = analogRead(A0);
   float reading = (int)((float)r / 10.24f);
+  
+  digitalWrite(publishLed, LOW); 
+  delay(100);
+  
   Publish(reading, "light", "l");
 }
 
@@ -105,11 +139,11 @@ void LedBlink(uint8_t pin) {
 }
 
 void Publish(double reading, char * type, char * unit) {
+  const int BUFFER_SIZE = JSON_OBJECT_SIZE(4) + JSON_ARRAY_SIZE(0);
   StaticJsonBuffer<300> jsonBuffer;
   JsonObject& root = jsonBuffer.createObject();
   
   digitalWrite(builtin_led, LOW); 
-  digitalWrite(publishLed, HIGH); 
   
   String TopicName = mqttNamespace + (String)type;
   char Topic[50];
@@ -131,7 +165,6 @@ void Publish(double reading, char * type, char * unit) {
   
   client.publish(Topic, buffer);    //http://knolleary.net/arduino-client-for-mqtt/api/#publish
   digitalWrite(builtin_led, HIGH);
-  digitalWrite(publishLed, LOW); 
 
 }
 

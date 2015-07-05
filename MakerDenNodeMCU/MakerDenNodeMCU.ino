@@ -23,34 +23,34 @@ WiFiUDP udp; // NTP Time service
 
 const char* ssid     = "";
 const char* password = "";
-const char* mqtt = "gloveboxAE.cloudapp.net";
-const char* devid = "node1";
-
-
-char isoTime[20];
+String mqtt = "";
+const char* devid = "";
 
 // MQTT Related
 const int BufferLen = 256;
 char buffer[BufferLen];
 String mqttNamespace = "gb/";
+PubSubClient client(wclient);
+
+char isoTime[20];
 
 int length;
 int sendCount = 0;
 
-IPAddress mqttBroker(191, 239, 72, 14); //gloveboxae
-//IPAddress mqttBroker(192, 168, 1, 17); //on RPiB
-
-PubSubClient client(wclient, mqtt);
+//IPAddress mqttBroker(191, 239, 72, 14); //gloveboxae
+IPAddress mqttBroker(192, 168, 1, 17); //on RPiB
 
 int builtin_led = BUILTIN_LED;  // On when publishing over mqtt
 int publishLed = D1;
 
 void setup() {
   Serial.begin(115200);
-  delay(50);
+  delay(100);
   
   getConfigFromEEPROM();
 
+  Serial.println(mqtt);
+  client.set_server(mqttBroker);
   mqttNamespace += String(devid) + "/";
   
   pinMode(builtin_led, OUTPUT);
@@ -71,7 +71,7 @@ void setup() {
   Serial.println("WiFi connected");  
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());  
-  
+
   setSyncInterval(60*60);
   setSyncProvider(ntpUnixTime);
 }
@@ -138,7 +138,7 @@ void LedBlink(uint8_t pin) {
   delay(25);
 }
 
-void Publish(double reading, char * type, char * unit) {
+void Publish(double reading, const char * type, const char * unit) {
   const int BUFFER_SIZE = JSON_OBJECT_SIZE(4) + JSON_ARRAY_SIZE(0);
   StaticJsonBuffer<300> jsonBuffer;
   JsonObject& root = jsonBuffer.createObject();

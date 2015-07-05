@@ -23,7 +23,7 @@ WiFiUDP udp; // NTP Time service
 
 const char* ssid     = "";
 const char* password = "";
-String mqtt = "";
+const char* mqtt = "";
 const char* devid = "";
 
 // MQTT Related

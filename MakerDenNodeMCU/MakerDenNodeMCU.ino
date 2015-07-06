@@ -24,7 +24,7 @@ WiFiUDP udp; // NTP Time service
 const char* ssid     = "";
 const char* password = "";
 const char* mqtt = "";
-const char* devid = "";
+char devid[20];
 
 // MQTT Related
 const int BufferLen = 256;
@@ -38,7 +38,7 @@ int length;
 int sendCount = 0;
 
 //IPAddress mqttBroker(191, 239, 72, 14); //gloveboxae
-IPAddress mqttBroker(192, 168, 1, 17); //on RPiB
+//IPAddress mqttBroker(192, 168, 1, 17); //on RPiB
 
 int builtin_led = BUILTIN_LED;  // On when publishing over mqtt
 int publishLed = D1;
@@ -47,10 +47,9 @@ void setup() {
   Serial.begin(115200);
   delay(100);
   
-  getConfigFromEEPROM();
+  GetConfigFromEEPROM();
 
-  Serial.println(mqtt);
-  client.set_server(mqttBroker);
+  client.set_server(mqtt);
   mqttNamespace += String(devid) + "/";
   
   pinMode(builtin_led, OUTPUT);
@@ -93,8 +92,9 @@ void loop() {
   delay(400);
 }
 
-void getConfigFromEEPROM(){
+void GetConfigFromEEPROM(){
   EEPROM.begin(512);
+  const char* dev;
   
   const int BUFFER_SIZE = JSON_OBJECT_SIZE(4) + JSON_ARRAY_SIZE(0);
   StaticJsonBuffer<BUFFER_SIZE> jsonBuffer;
@@ -117,7 +117,14 @@ void getConfigFromEEPROM(){
   ssid = root["SSID"];
   password = root["Password"];
   mqtt = root["Mqtt"];
-  devid = root["DevId"];
+  dev = root["DevId"];
+
+  int i = 0;
+  while (dev[i] != '\0' && i < 20) { 
+    devid[i] = dev[i];
+    i++; 
+  }
+  devid[i+1] = '\0';  
 }
 
 void GetLightReading() {
@@ -147,9 +154,9 @@ void Publish(double reading, const char * type, const char * unit) {
   
   String TopicName = mqttNamespace + (String)type;
   char Topic[50];
-  TopicName.toCharArray(Topic, 50, 0);  
+  TopicName.toCharArray(Topic, 50, 0);
   
-  root["Dev"] = "Node";
+  root["Dev"] = devid;
   root["Geo"] = "2011";  
   root["Type"] = type;
   root["Unit"] = unit;
@@ -257,8 +264,6 @@ time_t inline ntpUnixTime ()
 
   // Discard the rest of the packet
   udp.flush();
-
-  Serial.println("time: " + String(time - 2208988800ul));
 
   return time - 2208988800ul;   // convert NTP time to Unix time
 }

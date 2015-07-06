@@ -4,9 +4,8 @@
 
 const char* ssid = "NCW";
 const char* password = "malolos5459";
-//const char* mqtt = "gloveboxAE.cloudapp.net";
-const char* mqtt = "raspberrypi";
-const char* devid = "node1";
+const char* mqtt = "gloveboxAE.cloudapp.net";
+const char* devid = "node2";
 
 const int BufferLen = 510;  // max eprom length, minus 2 for data length
 char buffer[BufferLen];

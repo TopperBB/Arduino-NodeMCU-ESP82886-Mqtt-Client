@@ -21,10 +21,10 @@
 WiFiClient wclient; 
 WiFiUDP udp; // NTP Time service
 
-const char* ssid     = "";
-const char* password = "";
-const char* mqtt = "";
-char devid[20];
+const char* ssid;
+const char* password;
+const char* mqtt;
+const char* devid;
 
 // MQTT Related
 const int BufferLen = 256;
@@ -37,17 +37,20 @@ char isoTime[20];
 int length;
 int sendCount = 0;
 
-//IPAddress mqttBroker(191, 239, 72, 14); //gloveboxae
-//IPAddress mqttBroker(192, 168, 1, 17); //on RPiB
-
 int builtin_led = BUILTIN_LED;  // On when publishing over mqtt
 int publishLed = D1;
 
 void setup() {
   Serial.begin(115200);
-  delay(100);
+  delay(100);  
+  Serial.println();  
   
   GetConfigFromEEPROM();
+
+  Serial.println(ssid);
+  Serial.println(password);
+  Serial.println(mqtt);
+  Serial.println(devid);  
 
   client.set_server(mqtt);
   mqttNamespace += String(devid) + "/";
@@ -114,18 +117,25 @@ void GetConfigFromEEPROM(){
     return;
   }
 
-  ssid = root["SSID"];
-  password = root["Password"];
-  mqtt = root["Mqtt"];
-  dev = root["DevId"];
+  ssid = new char[StringLen(root["SSID"]) + 1];
+  password = new char[StringLen(root["Password"]) + 1];
+  mqtt = new char[StringLen(root["Mqtt"]) + 1];
+  devid = new char[StringLen(root["DevId"]) + 1];
 
-  int i = 0;
-  while (dev[i] != '\0' && i < 20) { 
-    devid[i] = dev[i];
-    i++; 
-  }
-  devid[i+1] = '\0';  
+
+  strcpy((char*)ssid, root["SSID"]);
+  strcpy((char*)password, root["Password"]);
+  strcpy((char*)mqtt, root["Mqtt"]);
+  strcpy((char*)devid, root["DevId"]);
 }
+
+
+int StringLen(const char* source){
+  int len = 0;
+  while (source[len] != '\0' && len < 100) { len++; }
+  return len;
+}
+
 
 void GetLightReading() {
   digitalWrite(publishLed, HIGH); 

@@ -1,5 +1,7 @@
 //  NTP Time Services
+#include <WiFiUdp.h>
 
+WiFiUDP udp; // NTP Time service
 char isoTime[20];
 
 char* GetISODateTime() {

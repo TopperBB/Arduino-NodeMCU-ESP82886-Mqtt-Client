@@ -24,3 +24,5 @@ This project implemented on the NodeMCU V2.0 (also known as V1.0) on the ESP8266
 The IoT Dashboard allows you to visualise the data streamed to Azure. 
 
 ![IoT Dashboard](https://github.com/MakerDen/IoT-Maker-Den-NETMF/blob/master/MakerDen/Lab%20Code/IoTDashboard.JPG)
+
+You can install the IoT Dashboard from [here](http://iotmakerdendashboard.azurewebsites.net/install/publish.htm).  Note, you will need to allow to run from unknown publisher.

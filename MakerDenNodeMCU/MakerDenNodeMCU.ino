@@ -20,7 +20,7 @@ const char* mqtt;
 const char* devid;
 
 
-int leds[] = {D4, D1};
+int leds[] = {D4, D3};
 
 
 void setup() {
@@ -60,12 +60,25 @@ void loop() {
     delay(500);      
   }
   else {
+    GetTempReading();
+    delay(450);
     GetLightReading();
+    delay(450);
   }
 
   MqttLoop();
+}
 
-  delay(450);
+void GetTempReading(){
+  digitalWrite(leds[1], HIGH); 
+  int r = analogRead(A0);
+  float reading = GetTemperature();
+  if (reading == -500) {return;}
+  Serial.println("returned temp: " + String(reading));
+  delay(50);    
+  digitalWrite(leds[1], LOW); 
+  
+  MqttPublish(reading, "temp", "c", leds[0]);
 }
 
 void GetLightReading() {

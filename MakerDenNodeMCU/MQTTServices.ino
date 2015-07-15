@@ -36,7 +36,7 @@ void MqttLoop(){
 
 void MqttPublish(double reading, const char * type, const char * unit, int ledPublish) {
   int length;
-  const int BUFFER_SIZE = JSON_OBJECT_SIZE(4) + JSON_ARRAY_SIZE(0);
+//  const int BUFFER_SIZE = JSON_OBJECT_SIZE(4) + JSON_ARRAY_SIZE(0);
   StaticJsonBuffer<300> jsonBuffer;
   JsonObject& root = jsonBuffer.createObject();
   
@@ -52,7 +52,7 @@ void MqttPublish(double reading, const char * type, const char * unit, int ledPu
   root["Unit"] = unit;
   
   JsonArray& data = root.createNestedArray("Val");
-  data.add(reading, 0);  // 2 is the number of decimals to print 
+  data.add(reading, 2);  // 2 is the number of decimals to print 
   data.add(ESP.getFreeHeap() , 0);  // 2 is the number of decimals to print   
 
   root["Utc"] = GetISODateTime();

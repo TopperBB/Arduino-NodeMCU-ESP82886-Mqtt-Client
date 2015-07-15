@@ -35,6 +35,21 @@ Adafruit_8x8matrix matrix = Adafruit_8x8matrix();
 
 void MatrixInit(){
   matrix.begin(0x70);  // pass in the address  
+  matrix.setBrightness(0);
+}
+
+void ScrollString(String text){
+  matrix.setTextSize(1);
+  matrix.setTextWrap(false);  // we dont want text to wrap so it scrolls nicely
+  matrix.setTextColor(LED_ON);
+  for (int8_t x=0; x>=-16; x--) {
+    matrix.clear();
+    matrix.setCursor(x,0);
+    matrix.print(text);
+    matrix.writeDisplay();
+    delay(100);
+  }
+  
 }
 
 void TestPattern(){

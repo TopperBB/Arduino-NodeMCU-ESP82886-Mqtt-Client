@@ -31,6 +31,7 @@ void setup() {
   LedsInit();
   GetConfigFromEEPROM();
   MqttInit(); 
+  MatrixInit();
 
   
   WiFi.begin(ssid, password);
@@ -61,24 +62,22 @@ void loop() {
   }
   else {
     GetTempReading();
-    delay(450);
     GetLightReading();
-    delay(450);
   }
 
   MqttLoop();
 }
 
 void GetTempReading(){
-  digitalWrite(leds[1], HIGH); 
-  int r = analogRead(A0);
+  digitalWrite(leds[1], HIGH);
   float reading = GetTemperature();
   if (reading == -500) {return;}
-  Serial.println("returned temp: " + String(reading));
-  delay(50);    
+  MqttPublish(reading, "temp", "c", leds[0]);
   digitalWrite(leds[1], LOW); 
   
-  MqttPublish(reading, "temp", "c", leds[0]);
+  float result = (float)((int)(reading * 10)) / 10;
+  Serial.println(String(result));
+  ScrollString(String(result));
 }
 
 void GetLightReading() {

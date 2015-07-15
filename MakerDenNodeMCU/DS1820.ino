@@ -1,22 +1,20 @@
 #include <OneWire.h>
 
 OneWire  ds(D5);  // on pin 5 (a 4.7K resistor is necessary)
+byte addr[8];
+byte type_s;
+bool found = false;
 
-float GetTemperature(){
-   byte i;
-  byte present = 0;
-  byte type_s;
-  byte data[12];
-  byte addr[8];
-  float celsius, fahrenheit;
-
-  
+void OneWireInit(){
+  byte i;
+     
   if ( !ds.search(addr)) {
     Serial.println("No more addresses.");
     Serial.println();
-    ds.reset_search();
-    delay(250);
-    return -500;
+//    ds.reset_search();
+//    delay(250);
+    found = false;
+    return;
   }
   
   Serial.print("ROM =");
@@ -27,9 +25,12 @@ float GetTemperature(){
 
   if (OneWire::crc8(addr, 7) != addr[7]) {
       Serial.println("CRC is not valid!");
-      return -500;
+      found = false;
+      return;
   }
   Serial.println();
+
+  found = true;
  
   // the first ROM byte indicates which chip
   switch (addr[0]) {
@@ -47,8 +48,18 @@ float GetTemperature(){
       break;
     default:
       Serial.println("Device is not a DS18x20 family device.");
-      return -500;
+      found = false;
+      return;
   } 
+}
+
+float GetTemperature(){
+  byte i;
+  byte present = 0;
+  byte data[12];
+  float celsius, fahrenheit;
+
+  if (!found) { return -500; }
 
   ds.reset();
   ds.select(addr);

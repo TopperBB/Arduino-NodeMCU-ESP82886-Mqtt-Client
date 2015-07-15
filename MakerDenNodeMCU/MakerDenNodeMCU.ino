@@ -32,6 +32,7 @@ void setup() {
   GetConfigFromEEPROM();
   MqttInit(); 
   MatrixInit();
+  OneWireInit();
 
   
   WiFi.begin(ssid, password);
@@ -71,7 +72,13 @@ void loop() {
 void GetTempReading(){
   digitalWrite(leds[1], HIGH);
   float reading = GetTemperature();
-  if (reading == -500) {return;}
+  
+  if (reading == -500) {
+    digitalWrite(leds[1], LOW); 
+    delay(500);
+    return;
+  }
+  
   MqttPublish(reading, "temp", "c", leds[0]);
   digitalWrite(leds[1], LOW); 
   

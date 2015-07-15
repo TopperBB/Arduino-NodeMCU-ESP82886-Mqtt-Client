@@ -1,56 +1,60 @@
 #include <OneWire.h>
+#include <DallasTemperature.h>  //https://github.com/milesburton/Arduino-Temperature-Control-Library
 
 OneWire  ds(D5);  // on pin 5 (a 4.7K resistor is necessary)
+DallasTemperature sensors(&ds);
 byte addr[8];
 byte type_s;
 bool found = false;
 
 void OneWireInit(){
-  byte i;
-     
-  if ( !ds.search(addr)) {
-    Serial.println("No more addresses.");
-    Serial.println();
-//    ds.reset_search();
-//    delay(250);
-    found = false;
-    return;
-  }
+  sensors.begin();
   
-  Serial.print("ROM =");
-  for( i = 0; i < 8; i++) {
-    Serial.write(' ');
-    Serial.print(addr[i], HEX);
-  }
-
-  if (OneWire::crc8(addr, 7) != addr[7]) {
-      Serial.println("CRC is not valid!");
-      found = false;
-      return;
-  }
-  Serial.println();
-
-  found = true;
- 
-  // the first ROM byte indicates which chip
-  switch (addr[0]) {
-    case 0x10:
-      Serial.println("  Chip = DS18S20");  // or old DS1820
-      type_s = 1;
-      break;
-    case 0x28:
-      Serial.println("  Chip = DS18B20");
-      type_s = 0;
-      break;
-    case 0x22:
-      Serial.println("  Chip = DS1822");
-      type_s = 0;
-      break;
-    default:
-      Serial.println("Device is not a DS18x20 family device.");
-      found = false;
-      return;
-  } 
+//  byte i;
+//     
+//  if ( !ds.search(addr)) {
+//    Serial.println("No more addresses.");
+//    Serial.println();
+////    ds.reset_search();
+////    delay(250);
+//    found = false;
+//    return;
+//  }
+//  
+//  Serial.print("ROM =");
+//  for( i = 0; i < 8; i++) {
+//    Serial.write(' ');
+//    Serial.print(addr[i], HEX);
+//  }
+//
+//  if (OneWire::crc8(addr, 7) != addr[7]) {
+//      Serial.println("CRC is not valid!");
+//      found = false;
+//      return;
+//  }
+//  Serial.println();
+//
+//  found = true;
+// 
+//  // the first ROM byte indicates which chip
+//  switch (addr[0]) {
+//    case 0x10:
+//      Serial.println("  Chip = DS18S20");  // or old DS1820
+//      type_s = 1;
+//      break;
+//    case 0x28:
+//      Serial.println("  Chip = DS18B20");
+//      type_s = 0;
+//      break;
+//    case 0x22:
+//      Serial.println("  Chip = DS1822");
+//      type_s = 0;
+//      break;
+//    default:
+//      Serial.println("Device is not a DS18x20 family device.");
+//      found = false;
+//      return;
+//  } 
 }
 
 float GetTemperature(){
@@ -58,6 +62,13 @@ float GetTemperature(){
   byte present = 0;
   byte data[12];
   float celsius, fahrenheit;
+
+
+  sensors.requestTemperatures(); // Send the command to get temperatures
+  return sensors.getTempCByIndex(0); // Why "byIndex"? You can have more than one IC on the same bus. 0 refers to the first IC on the wire
+
+
+  
 
   if (!found) { return -500; }
 

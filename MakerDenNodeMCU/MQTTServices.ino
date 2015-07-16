@@ -30,11 +30,15 @@ bool MqttConnect(){
 }
 
 void MqttLoop(){
+  if (!client.connected()) { return; }
   client.loop();  
 }
 
 
 void MqttPublish(double reading, const char * type, const char * unit, int ledPublish) {
+
+  if (!client.connected()) { return; }
+  
   int length;
 //  const int BUFFER_SIZE = JSON_OBJECT_SIZE(4) + JSON_ARRAY_SIZE(0);
   StaticJsonBuffer<300> jsonBuffer;

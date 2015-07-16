@@ -21,6 +21,7 @@ const char* devid;
 
 
 int leds[] = {D4, D3};
+int wifiRetry = 0;
 
 
 void setup() {
@@ -33,17 +34,18 @@ void setup() {
   MqttInit(); 
   MatrixInit();
   OneWireInit();
-
   
   WiFi.begin(ssid, password);
   
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED && wifiRetry < 20) {
     delay(500);
     Serial.print(".");
+    wifiRetry++;
   }
 
   Serial.println();
-  Serial.println("IP address: " + WiFi.localIP());
+  Serial.println("IP address");
+  Serial.println(WiFi.localIP());  
 
   setSyncInterval(60*60);
   setSyncProvider(ntpUnixTime);
@@ -54,18 +56,16 @@ void LedsInit(){
       pinMode(leds[i], OUTPUT);
       digitalWrite(leds[i], LOW); 
   }
+  digitalWrite(leds[0], HIGH); 
 }
 
 void loop() {
-  if (!MqttConnect()) {
-    Serial.println("mqtt connect retry");    
-    delay(500);      
-  }
-  else {
-    GetTempReading();
-    GetLightReading();
-  }
-
+  if (WiFi.status() == WL_CONNECTED) { MqttConnect(); }
+  else { delay(1000); }
+  
+  GetTempReading();
+  GetLightReading();
+  
   MqttLoop();
 }
 
@@ -83,8 +83,8 @@ void GetTempReading(){
   digitalWrite(leds[1], LOW); 
   
   float result = (float)((int)(reading * 10)) / 10;
-  Serial.println(String(result));
-  ScrollString(String(result));
+
+  ScrollString(String(result), 16);
 }
 
 void GetLightReading() {

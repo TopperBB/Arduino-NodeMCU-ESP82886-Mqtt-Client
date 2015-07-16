@@ -35,7 +35,7 @@ Adafruit_8x8matrix matrix = Adafruit_8x8matrix();
 
 void MatrixInit(){
   matrix.begin(0x70);  // pass in the address  
-  matrix.setBrightness(0);
+  matrix.setBrightness(2);
 }
 
 void ScrollString(String text){

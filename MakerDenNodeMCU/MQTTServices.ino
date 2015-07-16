@@ -14,7 +14,7 @@ char buffer[BufferLen];
 void MqttInit(){
   client.set_server(mqtt);  
   mqttNamespace += String(devid) + "/";
-  //  client.set_callback(callback);
+//  client.set_callback(callback);
 }
 
 bool MqttConnect(){
@@ -66,29 +66,29 @@ void MqttPublish(double reading, const char * type, const char * unit, int ledPu
 
 }
 
-// Callback function
-void callback(const MQTT::Publish& pub) {
-  // In order to republish this payload, a copy must be made
-  // as the orignal payload buffer will be overwritten whilst
-  // constructing the PUBLISH packet.
+//// Callback function
+//void callback(const MQTT::Publish& pub) {
+//  // In order to republish this payload, a copy must be made
+//  // as the orignal payload buffer will be overwritten whilst
+//  // constructing the PUBLISH packet.
+//
+//  // Copy the payload to a new message
+//  MQTT::Publish newpub("outTopic", pub.payload(), pub.payload_len());
+//  client.publish(newpub);
+//}
 
-  // Copy the payload to a new message
-  MQTT::Publish newpub("outTopic", pub.payload(), pub.payload_len());
-  client.publish(newpub);
-}
-
-// handles message arrived on subscribed topic(s)
-void callback(char* topic, byte* payload, unsigned int length) {
-  int i = 0;
-  Serial.println("topic: " + String(topic));
-  Serial.println("len: " + String(length, DEC));
-  // create character buffer with ending null terminator (string)
-
-  for (i = 0; i < length  && i < BufferLen - 1; i++) {
-    buffer[i] = payload[i];
-  }
-
-  buffer[i] = '\0';
-  String msgString = String(buffer);
-  Serial.println("msg: " + msgString);
-}
+//// handles message arrived on subscribed topic(s)
+//void callback(char* topic, byte* payload, unsigned int length) {
+//  int i = 0;
+//  Serial.println("topic: " + String(topic));
+//  Serial.println("len: " + String(length, DEC));
+//  // create character buffer with ending null terminator (string)
+//
+//  for (i = 0; i < length  && i < BufferLen - 1; i++) {
+//    buffer[i] = payload[i];
+//  }
+//
+//  buffer[i] = '\0';
+//  String msgString = String(buffer);
+//  Serial.println("msg: " + msgString);
+//}

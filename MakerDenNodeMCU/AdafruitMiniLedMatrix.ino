@@ -1,6 +1,6 @@
 #include <Wire.h>
-#include "Adafruit_LEDBackpack.h"
-#include "Adafruit_GFX.h"
+#include "Adafruit_LEDBackpack.h"  // https://github.com/adafruit/Adafruit-LED-Backpack-Library
+#include "Adafruit_GFX.h"   // https://github.com/adafruit/Adafruit-GFX-Library
 
 static const uint8_t PROGMEM
   smile_bmp[] =

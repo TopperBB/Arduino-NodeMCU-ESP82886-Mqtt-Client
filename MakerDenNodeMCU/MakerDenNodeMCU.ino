@@ -91,13 +91,13 @@ void GetLightReading() {
   delay(50); 
   digitalWrite(leds[1], LOW); 
   
-  SetDisplayBrightness((int)reading);
+  SetDisplayBrightness((byte)reading);
   
   MqttPublish(reading, "light", "l", leds[0]);
 }
 
-void SetDisplayBrightness(int lvl){
-  lvl = ((abs(lvl) % 100) / 15);
+void SetDisplayBrightness(byte lvl){
+  lvl = (lvl % 100) / 15;
   SetBrightness(lvl);
 }
 

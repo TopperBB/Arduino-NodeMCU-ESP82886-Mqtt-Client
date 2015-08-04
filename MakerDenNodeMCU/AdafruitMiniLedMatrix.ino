@@ -38,10 +38,8 @@ void MatrixInit(){
   SetBrightness(6);
 }
 
-void SetBrightness(int lvl){
-  if (lvl < 0) {lvl = 0;}
-  if (lvl > 15) {lvl = 15;}
-  
+void SetBrightness(byte lvl){
+  if (lvl > 15) {lvl = 15;}  
   matrix.setBrightness(lvl);
 }
 

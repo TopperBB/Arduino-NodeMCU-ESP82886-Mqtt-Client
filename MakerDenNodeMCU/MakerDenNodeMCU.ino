@@ -71,15 +71,10 @@ void loop() {
 
 void GetTempReading(){
   digitalWrite(leds[1], HIGH);
+  
   float reading = GetTemperature();
-  
-  if (reading == -500) {
-    digitalWrite(leds[1], LOW); 
-    delay(500);
-    return;
-  }
-  
   MqttPublish(reading, "temp", "c", leds[0]);
+  
   digitalWrite(leds[1], LOW); 
   
   float result = (float)((int)(reading * 10)) / 10;
@@ -89,12 +84,21 @@ void GetTempReading(){
 
 void GetLightReading() {
   digitalWrite(leds[1], HIGH); 
+  
   int r = analogRead(A0);
   float reading = (int)((float)r / 10.24f);
-  delay(50);    
+  
+  delay(50); 
   digitalWrite(leds[1], LOW); 
   
+  SetDisplayBrightness((int)reading);
+  
   MqttPublish(reading, "light", "l", leds[0]);
+}
+
+void SetDisplayBrightness(int lvl){
+  lvl = ((abs(lvl) % 100) / 15);
+  SetBrightness(lvl);
 }
 
 

@@ -37,7 +37,7 @@
 // Arduino.  When held that way, the first pixel is at the top right, and
 // lines are arranged in columns, progressive order.  The shield uses
 // 800 KHz (v2) pixels that expect GRB color data.
-Adafruit_NeoMatrix neoMatrix = Adafruit_NeoMatrix(8, 8, 4, 1, PIN,
+Adafruit_NeoMatrix neoMatrix = Adafruit_NeoMatrix(8, 8, 4, 1, PIN, // 8x8 panel, 4 panels horizontal, 1 panel high
   NEO_MATRIX_TOP    + NEO_MATRIX_LEFT +
   NEO_MATRIX_ROWS + NEO_MATRIX_PROGRESSIVE,
   NEO_GRB            + NEO_KHZ800);

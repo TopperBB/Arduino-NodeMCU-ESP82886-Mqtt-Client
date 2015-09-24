@@ -2,8 +2,8 @@
 #include <EEPROM.h>
 
 
-const char* ssid = "NCW";
-const char* password = "malolos5459";
+const char* ssid[] = { "NCW", "dgTether" };
+const char* password[] = { "malolos5459", "VisualStudio2005" };
 const char* mqtt = "gloveboxAE.cloudapp.net";
 const char* devid = "ndwhite";
 
@@ -16,11 +16,20 @@ void setup() {
   Serial.begin(115200);
   EEPROM.begin(512);
 
-  StaticJsonBuffer<300> jsonBuffer;
+  StaticJsonBuffer<1000> jsonBuffer;
   JsonObject& root = jsonBuffer.createObject();
   
-  root["SSID"] = ssid;
-  root["Password"] = password;  
+  //root["SSID"] = ssid;
+
+  JsonArray& _ssid = root.createNestedArray("SSID");
+  _ssid.add(ssid[0]);
+  _ssid.add(ssid[1]);
+
+  JsonArray& _password = root.createNestedArray("Password");
+  _password.add(password[0]);
+  _password.add(password[1]);
+
+  //root["Password"] = password;
   root["Mqtt"] = mqtt;
   root["DevId"] = devid;
   
@@ -33,9 +42,6 @@ void setup() {
     EEPROM.write(address, buffer[address-2]);
   }
   EEPROM.commit();
-
-  ssid = "hello";
-  Serial.println(ssid);
 }
 
 void loop() {
@@ -46,7 +52,7 @@ void loop() {
 }
 
 void getconfiguration(){
-  StaticJsonBuffer<200> jsonBuffer;
+  StaticJsonBuffer<1000> jsonBuffer;
   int address = 2;
   length = word(EEPROM.read(0), EEPROM.read(1));
   for (address = 2; address < length + 2; address++) {
@@ -62,14 +68,20 @@ void getconfiguration(){
     return;
   }
 
-  ssid = root["SSID"];
-  password = root["Password"];
+  ssid[0] = root["SSID"][0];
+  password[0] = root["Password"][0];
   mqtt = root["Mqtt"];
   devid = root["DevId"];
 
+  root["SSID"].
+
+  //Serial.println(size);
+	  JsonArray& _ssid = root.createNestedArray("SSID");
   
-  Serial.println(ssid);
-  Serial.println(password);
+  Serial.println(ssid[0]);
+  Serial.println(password[0]);
+  Serial.println(ssid[1]);
+  Serial.println(password[1]);
   Serial.println(mqtt);
   Serial.println(devid);
 }

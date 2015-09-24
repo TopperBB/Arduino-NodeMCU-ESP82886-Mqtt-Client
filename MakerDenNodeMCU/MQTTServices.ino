@@ -6,12 +6,15 @@ WiFiClient wclient;
 PubSubClient client(wclient);
 String mqttNamespace = "gb/";
 
+int MqttConnectedLed;
+
 int sendCount = 0;
 const int BufferLen = 256;
 char buffer[BufferLen];
 
 
-void MqttInit(){
+void MqttInit(int ledMqttConnected){
+  MqttConnectedLed = ledMqttConnected;
   client.set_server(mqtt);  
   mqttNamespace += String(devid) + "/";
 //  client.set_callback(callback);
@@ -25,6 +28,7 @@ bool MqttConnect(){
   {
     Serial.println("mqtt connect");
     client.connect(String(ESP.getChipId()));
+
     return client.connected();
   }
 }
@@ -35,16 +39,19 @@ void MqttLoop(){
 }
 
 
-void MqttPublish(double reading, const char * type, const char * unit, int ledPublish) {
+void MqttPublish(double reading, const char * type, const char * unit) {
 
-  if (!client.connected()) { return; }
-  
+  if (!client.connected()) { 
+    digitalWrite(MqttConnectedLed, HIGH);
+    return; 
+  }
+
+  digitalWrite(MqttConnectedLed, LOW); 
+
   int length;
 //  const int BUFFER_SIZE = JSON_OBJECT_SIZE(4) + JSON_ARRAY_SIZE(0);
   StaticJsonBuffer<300> jsonBuffer;
   JsonObject& root = jsonBuffer.createObject();
-  
-  digitalWrite(ledPublish, LOW); 
   
   String TopicName = mqttNamespace + (String)type;
   char Topic[50];
@@ -65,9 +72,6 @@ void MqttPublish(double reading, const char * type, const char * unit, int ledPu
   length = root.printTo(buffer, BufferLen);
   
   client.publish(Topic, buffer);    //http://knolleary.net/arduino-client-for-mqtt/api/#publish
-  
-  digitalWrite(ledPublish, HIGH);
-
 }
 
 //// Callback function

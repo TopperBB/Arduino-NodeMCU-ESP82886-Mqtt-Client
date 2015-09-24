@@ -12,7 +12,7 @@
 #include <ArduinoJson.h>    // https://github.com/bblanchon/ArduinoJson
 #include <ESP8266WiFi.h>
 
-const byte activeWifiConnection = 1;
+byte activeWifiConnection = 0;
 const byte WifiConnections = 2;
 int wifiRetry = 0;
 
@@ -23,6 +23,10 @@ const char* devid;
 
 enum lights {
 	mqttConnected = D4, Sensing = D3
+};
+
+enum  inputs {
+	wifiSelector = D7
 };
 
 int leds[] = { mqttConnected, Sensing };
@@ -38,18 +42,18 @@ void setup() {
 	MatrixInit();
 	OneWireInit();
 
+	activeWifiConnection = WifiSelector();
+
 	WiFi.begin(ssid[activeWifiConnection], password[activeWifiConnection]);
 
-	while (WiFi.status() != WL_CONNECTED && wifiRetry < 20) {
+	while (WiFi.status() != WL_CONNECTED && wifiRetry < 10) {
 		delay(500);
 		Serial.print(".");
 		wifiRetry++;
 	}
 
 	Serial.println();
-	Serial.println("IP address");
 	Serial.println(WiFi.localIP());
-
 }
 
 void LedsInit() {
@@ -63,14 +67,13 @@ void LedsInit() {
 void loop() {
 	if (WiFi.status() == WL_CONNECTED) {
 		if (timeStatus() == timeNotSet) {
-			Serial.println("get time");
 			setSyncProvider(ntpUnixTime);
 			setSyncInterval(60 * 60);
 		}
 		MqttConnect();
 	}
-	else { 
-		delay(1000); 
+	else {
+		delay(1000);
 	}
 
 	GetTempReading();
@@ -109,6 +112,11 @@ void GetLightReading() {
 void SetDisplayBrightness(byte lvl) {
 	lvl = (lvl % 100) / 15;
 	SetBrightness(lvl);
+}
+
+byte WifiSelector() {
+	pinMode(wifiSelector, INPUT);
+	return !digitalRead(wifiSelector);
 }
 
 

@@ -72,11 +72,6 @@ void getconfiguration(){
   password[0] = root["Password"][0];
   mqtt = root["Mqtt"];
   devid = root["DevId"];
-
-  root["SSID"].
-
-  //Serial.println(size);
-	  JsonArray& _ssid = root.createNestedArray("SSID");
   
   Serial.println(ssid[0]);
   Serial.println(password[0]);

@@ -52,7 +52,7 @@ void ScrollString(String text, int cycles){
     matrix.setCursor(x,0);
     matrix.print(text);
     matrix.writeDisplay();
-    delay(100);
+    delay(150);
   }
   
 }

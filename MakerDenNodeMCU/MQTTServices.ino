@@ -64,7 +64,7 @@ void MqttPublish(double reading, const char * type, const char * unit) {
   
   JsonArray& data = root.createNestedArray("Val");
   data.add(reading, 2);  // 2 is the number of decimals to print 
-  data.add(ESP.getFreeHeap() , 0);  // 2 is the number of decimals to print   
+  data.add(ESP.getFreeHeap()); 
 
   root["Utc"] = GetISODateTime();
   root["Id"] = sendCount++;

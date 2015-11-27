@@ -11,6 +11,8 @@
 #include <Time.h>           // http://playground.arduino.cc/code/time - installed via library manager
 #include <ArduinoJson.h>    // https://github.com/bblanchon/ArduinoJson
 #include <ESP8266WiFi.h>
+#include <Wire.h>
+#include <Adafruit_BMP085.h>
 
 byte activeWifiConnection = 0;
 const byte WifiConnections = 2;
@@ -20,6 +22,8 @@ const char* ssid[WifiConnections];
 const char* password[WifiConnections];
 const char* mqtt;
 const char* devid;
+
+Adafruit_BMP085 bmp;
 
 enum lights {
 	mqttConnected = D4, Sensing = D3
@@ -32,15 +36,18 @@ enum  inputs {
 int leds[] = { mqttConnected, Sensing };
 
 void setup() {
-	Serial.begin(115200);
+	Serial.begin(9600);
 	delay(100);
 	Serial.println();
+
+
 
 	LedsInit();
 	GetConfigFromEEPROM();
 	MqttInit(leds[0]);
 	MatrixInit();
-	OneWireInit();
+  bmp.begin();
+//	OneWireInit();
 
 	activeWifiConnection = WifiSelector();
 
@@ -85,14 +92,16 @@ void loop() {
 void GetTempReading() {
 	digitalWrite(leds[1], HIGH);
 
-	float reading = GetTemperature();
+//	float reading = GetTemperature();
+  float reading = bmp.readTemperature();
 	MqttPublish(reading, "temp", "c");
 
 	digitalWrite(leds[1], LOW);
 
-	float result = (float)((int)(reading * 10)) / 10;
+  int result = (int)(reading + 0.5);  
+  int pressure = (int)((int)( bmp.readPressure() + 0.5) / 100);
 
-	ScrollString(String(result), 16);
+	ScrollString(" " + String(result)+ "C " + String(pressure) + "hPa", 71);
 }
 
 void GetLightReading() {

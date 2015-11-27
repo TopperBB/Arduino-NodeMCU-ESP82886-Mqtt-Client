@@ -18,7 +18,7 @@ This project implemented on the NodeMCU V2.0 (also known as V1.0) on the ESP8266
 ## Software Requirements
 
 1. On Windows, Mac and Linux you will need to install the latest [CP210x USB to UART Bridge VCP Drivers](https://www.silabs.com/products/mcu/Pages/USBtoUARTBridgeVCPDrivers.aspx)
-2. [Arduino IDE 1.6.5 or better](https://www.arduino.cc/en/Main/Software)
+2. [Arduino IDE 1.6.5](https://www.arduino.cc/en/Main/Software) As at Nov 27, 2015, version 1.6.6 is not compatible with the ESP8266 SDK
 
 ##Arduino on ESP8266
 [Arduino on ESP8266 Project](https://github.com/esp8266/Arduino)

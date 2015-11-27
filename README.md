@@ -18,9 +18,7 @@ This project implemented on the NodeMCU V2.0 (also known as V1.0) on the ESP8266
 ## Software Requirements
 
 1. On Windows, Mac and Linux you will need to install the latest [CP210x USB to UART Bridge VCP Drivers](https://www.silabs.com/products/mcu/Pages/USBtoUARTBridgeVCPDrivers.aspx)
-2. Arduino IDE 1.6.5 or better
-  * Board Manager: NodeMCU V1.0 (ESP-12E Module) (required for the NodeMCU V2.0 physical board)
-  * Board Manager http://arduino.esp8266.com/staging/package_esp8266com_index.json - As at July 2015 use the staging Board Manager with the V1.0 board
+2. [Arduino IDE 1.6.5 or better](https://www.arduino.cc/en/Main/Software)
 
 ##Arduino on ESP8266
 [Arduino on ESP8266 Project](https://github.com/esp8266/Arduino)
@@ -29,7 +27,10 @@ Add NodeMCU to Arduino IDE
 
 1. Add Additional Board Manager URLs: File -> Preferences.  Add http://arduino.esp8266.com/stable/package_esp8266com_index.json 
 2. Restart Arduino IDE
-3. Arduino IDE 1.6.6 or greater: Tools -> Board -> Board Manager -> Search ESP8266
+3. Arduino IDE 1.6.6 or greater: Tools -> Board -> Board Manager -> Search ESP8266 -> Install
+4. Select NodeMUC Board: Tools -> Board -> NodeMCU 1.0 (ESP-12E module)
+5. Set Port and Upload Speed: Tools
+4. Set port and port speed: Adruino IDE: Tools
 
 
 ## IoT Dashboard

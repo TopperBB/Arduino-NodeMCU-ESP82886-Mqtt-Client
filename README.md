@@ -7,7 +7,10 @@ This project implemented on the NodeMCU V2.0 (also known as V1.0) on the ESP8266
 ##Physical Board
 
 1. [NodeMCU v2 - Lua based ESP8266 development kit](http://tronixlabs.com/wireless/esp8266/nodemcu-v2-lua-based-esp8266-development-kit)
-2. [NodeMCU Project](http://www.nodemcu.com/index_en.html)
+2. [BMP180 Barometric Pressure Sensor](http://tronixlabs.com/sensors/altitude/bmp180-barometric-pressure-sensor-board/)
+3. [Adafruit Mini 8x8 LED Matrix w/I2C Backpack](http://tronixlabs.com/display/led/matrix/adafruit-mini-8x8-led-matrix-w-i2c-backpack-red-australia/)
+4. 1 x [Light Dependent Resistor](http://tronixlabs.com/sensors/light/ldr/light-dependent-resistor/)
+5. 1 x 10k resistor
 
 ![schematic](https://github.com/MakerDen/Maker-Den-Arduino-and-NodeMCU-ESP8266/blob/master/MakerDenNodeMCU/Fritzing/NodeMCU%20MQTT%20Board_bb.jpg)
 
@@ -21,6 +24,12 @@ This project implemented on the NodeMCU V2.0 (also known as V1.0) on the ESP8266
 
 ##Arduino on ESP8266
 [Arduino on ESP8266 Project](https://github.com/esp8266/Arduino)
+
+Add NodeMCU to Arduino IDE
+
+1. Add Additional Board Manager URLs: File -> Preferences.  Add http://arduino.esp8266.com/stable/package_esp8266com_index.json 
+2. Restart Arduino IDE
+3. Arduino IDE 1.6.6 or greater: Tools -> Board -> Board Manager -> Search ESP8266
 
 
 ## IoT Dashboard

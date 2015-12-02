@@ -30,7 +30,7 @@ Add NodeMCU to Arduino IDE
 2. Restart Arduino IDE
 3. Arduino IDE 1.6.6 or greater: Tools -> Board -> Board Manager -> Search ESP8266 -> Install
 4. Select NodeMUC Board: Tools -> Board -> NodeMCU 1.0 (ESP-12E module)
-5. Set Port and Upload Speed: Tools
+5. Set Port and Upload Speed: Tools.  Note, you may need to try different port speeds to sucessfully flash the device.
 4. Set port and port speed: Adruino IDE: Tools
 
 

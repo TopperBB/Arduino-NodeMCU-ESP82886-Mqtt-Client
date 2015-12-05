@@ -1,8 +1,16 @@
-# Azure IoT Hub Field Gateway and Maker Den over MQTT on Arduino on NodeMCU (ESP8266 ESP-12E) 
+# Temperature and Air Pressure (BMP180) MQTT Streaming
 
-Streams data in JSON format for Maker Den and and IoT Hub Field Gateway schema over MQTT
+## Platform
 
 This project implemented on the NodeMCU V2.0 (also known as V1.0) on the ESP8266, ESP-12E chip using the Arduino Firmware
+
+## Schema
+
+Streams data in the following JSON formats
+
+1. Maker Den 
+2. Azure IoT Hub Field Gateway
+
 
 ##Physical Board
 

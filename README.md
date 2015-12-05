@@ -1,4 +1,4 @@
-# Temperature and Air Pressure (BMP180) MQTT Streaming
+# Temperature and Air Pressure Sensor MQTT Streaming
 
 ## Platform
 

@@ -10,10 +10,13 @@ Streams data in the following JSON formats
 
 1. Maker Den 
 
-    {"Dev":"DeviceId","Geo":"2011","Celsius":27,"hPa":1016,"Light":98,"Utc":"2015-12-06T23:05:33","Id":71}
+    {"Dev":"ndclear","Geo":"2011","Type":"temp","Unit":"c","Val":[27.30,25848],"Utc":"2015-12-06T23:06:08","Id":84}
+    {"Dev":"ndclear","Geo":"2011","Type":"kPa","Unit":"kPa","Val":[101.00,25824],"Utc":"2015-12-06T23:06:19","Id":85}
+    {"Dev":"ndclear","Geo":"2011","Type":"light","Unit":"l","Val":[99.00,25840],"Utc":"2015-12-06T23:06:19","Id":86}
     
 2. Azure IoT Hub Field Gateway
 
+    {"Dev":"ndclear","Geo":"2011","Celsius":27,"hPa":1016,"Light":99,"Utc":"2015-12-06T23:07:04","Id":103}
 
 ##Physical Board
 

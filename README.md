@@ -46,7 +46,12 @@ Add NodeMCU to Arduino IDE
 4. Select NodeMUC Board: Tools -> Board -> NodeMCU 1.0 (ESP-12E module)
 5. Set Port and Upload Speed: Tools.  Note, you may need to try different port speeds to sucessfully flash the device.
 6. Set port and port speed: Adruino IDE: Tools
-7. Open MakerDenNodeMCU.ino in the Arduino IDE
+
+
+##Two Projects in One
+
+1. SetEEPROMConfiguration.ino Set your Wi-Fi SSID and password (up to two can be specified - ground pin 7 to select the second Wi-Fi).  Deploy this app to the NodeMCU to write configuration settings to EPROM
+7. MakerDenNodeMCU.ino - This id the main application, it will read configuration setting from the EPROM
 
 
 ## IoT Dashboard

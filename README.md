@@ -9,7 +9,9 @@ This project implemented on the NodeMCU V2.0 (also known as V1.0) on the ESP8266
 Streams data in the following JSON formats
 
 1. Maker Den 
+
     {"Dev":"DeviceId","Geo":"2011","Celsius":27,"hPa":1016,"Light":98,"Utc":"2015-12-06T23:05:33","Id":71}
+    
 2. Azure IoT Hub Field Gateway
 
 

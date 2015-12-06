@@ -5,6 +5,7 @@ WiFiClient wclient;
 
 PubSubClient client(wclient);
 String mqttNamespace = "gb/";
+String mqttIoTHubNamespace = "gb/iothub";
 
 int MqttConnectedLed;
 
@@ -36,6 +37,43 @@ bool MqttConnect(){
 void MqttLoop(){
   if (!client.connected()) { return; }
   client.loop();  
+}
+
+void MqttPublish(int temperature, int pressure, int light){
+  if (!client.connected()) { 
+    digitalWrite(MqttConnectedLed, HIGH);
+    return; 
+  }
+
+  digitalWrite(MqttConnectedLed, LOW); 
+
+
+  int length;
+//  const int BUFFER_SIZE = JSON_OBJECT_SIZE(4) + JSON_ARRAY_SIZE(0);
+  StaticJsonBuffer<300> jsonBuffer;
+  JsonObject& root = jsonBuffer.createObject();
+  
+  String TopicName = mqttIoTHubNamespace;
+  char Topic[50];
+  TopicName.toCharArray(Topic, 50, 0);
+  
+  root["Dev"] = devid;
+  root["Geo"] = "2011";  
+  root["Celsius"] = temperature;
+  root["hPa"] = pressure;
+  root["Light"] = light;
+  
+//  JsonArray& data = root.createNestedArray("Val");
+//  data.add(reading, 2);  // 2 is the number of decimals to print 
+//  data.add(ESP.getFreeHeap()); 
+
+  root["Utc"] = GetISODateTime();
+  root["Id"] = sendCount++;
+  
+  length = root.printTo(buffer, BufferLen);
+  
+  client.publish(Topic, buffer);    //http://knolleary.net/arduino-client-for-mqtt/api/#publish
+  
 }
 
 

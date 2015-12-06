@@ -48,7 +48,7 @@ Add NodeMCU to Arduino IDE
 6. Set port and port speed: Adruino IDE: Tools
 
 
-##Two Projects in One
+##Project Files
 
 1. SetEEPROMConfiguration.ino Set your Wi-Fi SSID and password (up to two can be specified - ground pin 7 to select the second Wi-Fi).  Deploy this app to the NodeMCU to write configuration settings to EPROM
 7. MakerDenNodeMCU.ino - This id the main application, it will read configuration setting from the EPROM

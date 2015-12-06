@@ -1,4 +1,4 @@
-# Temperature and Air Pressure Sensor MQTT Streaming
+# Temperature, Pressure and Light Sensor Streaming over MQTT
 
 ## Platform
 

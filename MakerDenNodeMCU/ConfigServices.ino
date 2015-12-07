@@ -26,9 +26,11 @@ void GetConfigFromEEPROM() {
 
 	mqtt = new char[StringLen(root["Mqtt"]) + 1];
 	devid = new char[StringLen(root["DevId"]) + 1];
+  geo = new char[StringLen(root["Geo"]) + 1];
 
 	strcpy((char*)mqtt, root["Mqtt"]);
 	strcpy((char*)devid, root["DevId"]);
+  strcpy((char*)geo, root["Geo"]);
 
 	for (int i = 0; i < WifiConnections; i++)
 	{

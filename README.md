@@ -8,13 +8,13 @@ This project implemented on the NodeMCU V2.0 (also known as V1.0) on the ESP8266
 
 Streams data in the following JSON formats
 
-1. Maker Den 
+1. Maker Den. (MQTT Namespace gb/device/type)
 
     {"Dev":"DeviceId","Geo":"2011","Type":"temp","Unit":"c","Val":[27.30,25848],"Utc":"2015-12-06T23:06:08","Id":84}
     {"Dev":"DeviceId","Geo":"2011","Type":"kPa","Unit":"kPa","Val":[101.00,25824],"Utc":"2015-12-06T23:06:19","Id":85}
     {"Dev":"DeviceId","Geo":"2011","Type":"light","Unit":"l","Val":[99.00,25840],"Utc":"2015-12-06T23:06:19","Id":86}
     
-2. Azure IoT Hub Field Gateway
+2. Azure IoT Hub Field Gateway. (MQTT Namespace gb/iothub)
 
     {"Dev":"DeviceId","Geo":"2011","Celsius":27,"hPa":1016,"Light":99,"Utc":"2015-12-06T23:07:04","Id":103}
 
@@ -44,18 +44,31 @@ Add NodeMCU to Arduino IDE
 2. Restart Arduino IDE
 3. Arduino IDE 1.6.6 or greater: Tools -> Board -> Board Manager -> Search ESP8266 -> Install
 4. Select NodeMUC Board: Tools -> Board -> NodeMCU 1.0 (ESP-12E module)
-5. Set Port and Upload Speed: Tools.  Note, you may need to try different port speeds to sucessfully flash the device.
+5. Set Port and Upload Speed: Tools.  Note, you may need to try different port speeds to sucessfully flash the device. Faster is better as each time you upload the code to the NodeMCU you are uploading the complete ROM not just your code.
 6. Set port and port speed: Adruino IDE: Tools
 
 
 ##Project Files
 
 1. SetEEPROMConfiguration.ino Set your Wi-Fi SSID and password (up to two can be specified - ground pin 7 to select the second Wi-Fi).  Deploy this app to the NodeMCU to write configuration settings to EPROM
-7. MakerDenNodeMCU.ino - This id the main application, it will read configuration setting from the EPROM
+7. MakerDenNodeMCU.ino - This is the main application, it will read configuration setting from the EPROM, manages sensor readings and publishing to MQTT
+
+##Subscripting to MQTT Data
+
+Install [Mosquiotto](www.mosquitto.org) client tools from the download page.  Install Open SSL and PThread libraries as per set up instructions.
+
+1. To subscribe to Maker Den data
+
+    mosquitto_sub.exe -h YourMqttServer -t gb/# 
+    
+2. To subscribe to IoT Hub data
+
+    mosquitto_sub.exe -h YourMqttServer -t iothub/#
+
 
 
 ## IoT Dashboard
-The IoT Dashboard allows you to visualise the data streamed to Azure. 
+The IoT Dashboard allows you to visualise the data streamed to a MQTT service running in an Azure Virtual Machine. 
 
 ![IoT Dashboard](https://github.com/MakerDen/IoT-Maker-Den-NETMF/blob/master/MakerDen/Lab%20Code/IoTDashboard.JPG)
 

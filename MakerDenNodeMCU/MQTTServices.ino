@@ -5,7 +5,7 @@ WiFiClient wclient;
 
 PubSubClient client(wclient);
 String mqttNamespace = "gb/";
-String mqttIoTHubNamespace = "gb/iothub";
+String mqttIoTHubNamespace = "iothub/";
 
 int MqttConnectedLed;
 
@@ -18,6 +18,8 @@ void MqttInit(int ledMqttConnected){
   MqttConnectedLed = ledMqttConnected;
   client.set_server(mqtt);  
   mqttNamespace += String(devid) + "/";
+  mqttIoTHubNamespace += String(devid);
+  
 //  client.set_callback(callback);
 }
 
@@ -39,7 +41,7 @@ void MqttLoop(){
   client.loop();  
 }
 
-void MqttPublish(int temperature, int pressure, int light){
+void MqttPublish(float temperature, int pressure, int light, const char * geo){
   if (!client.connected()) { 
     digitalWrite(MqttConnectedLed, HIGH);
     return; 
@@ -58,14 +60,10 @@ void MqttPublish(int temperature, int pressure, int light){
   TopicName.toCharArray(Topic, 50, 0);
   
   root["Dev"] = devid;
-  root["Geo"] = "2011";  
+  root["Geo"] = geo;  
   root["Celsius"] = temperature;
   root["hPa"] = pressure;
   root["Light"] = light;
-  
-//  JsonArray& data = root.createNestedArray("Val");
-//  data.add(reading, 2);  // 2 is the number of decimals to print 
-//  data.add(ESP.getFreeHeap()); 
 
   root["Utc"] = GetISODateTime();
   root["Id"] = sendCount++;
@@ -77,7 +75,7 @@ void MqttPublish(int temperature, int pressure, int light){
 }
 
 
-void MqttPublish(double reading, const char * type, const char * unit) {
+void MqttPublish(float reading, const char * type, const char * unit, const char * geo) {
 
   if (!client.connected()) { 
     digitalWrite(MqttConnectedLed, HIGH);
@@ -96,7 +94,7 @@ void MqttPublish(double reading, const char * type, const char * unit) {
   TopicName.toCharArray(Topic, 50, 0);
   
   root["Dev"] = devid;
-  root["Geo"] = "2011";  
+  root["Geo"] = geo;  
   root["Type"] = type;
   root["Unit"] = unit;
   

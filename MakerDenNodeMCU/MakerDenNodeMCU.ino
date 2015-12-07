@@ -22,16 +22,17 @@ const char* ssid[WifiConnections];
 const char* password[WifiConnections];
 const char* mqtt;
 const char* devid;
+const char* geo;
 
 Adafruit_BMP085 bmp;
 
 // Globals
-int temperature;
+float temperature;
 int pressure;
 int light;
 
 enum lights {
-	mqttConnected = D4, Sensing = D3
+	mqttConnected = D4, Sensing = BUILTIN_LED
 };
 
 enum  inputs {
@@ -96,37 +97,35 @@ void loop() {
 
 // publish data in flattened schema for IoT Hub
 void PublishIoTHub(){
-  MqttPublish(temperature, pressure, light);
+  MqttPublish(temperature, pressure, light, geo);
 }
 
 void GetTempReading() {
-	digitalWrite(leds[1], HIGH);
+	digitalWrite(leds[1], LOW);
 
-  float reading = bmp.readTemperature();
-	MqttPublish(reading, "temp", "c");
+  temperature = bmp.readTemperature();  
+	MqttPublish(temperature, "temp", "c", geo);
 
-  digitalWrite(leds[1], LOW);
-  
-  temperature = (int)(reading + 0.5);  
   pressure = (int)((int)( bmp.readPressure() + 0.5) / 100);
+  MqttPublish(pressure / 10, "kPa", "kPa", geo);
   
-  ScrollString(" " + String(temperature)+ "C " + String(pressure) + "hPa", 71);
+  digitalWrite(leds[1], HIGH);
+
+  int roundedTemp = (int)(temperature + 0.5);
   
-  MqttPublish(pressure / 10, "kPa", "kPa");
+  ScrollString(" " + String(roundedTemp) + "C " + String(pressure) + "hPa", 71); 
 }
 
 void GetLightReading() {
-	digitalWrite(leds[1], HIGH);
+	digitalWrite(leds[1], LOW);
 
 	int r = analogRead(A0);
 	light = (int)((float)r / 10.24f);  // convert to a percentage
+  MqttPublish(light, "light", "l", geo);
 
-	delay(50);
-	digitalWrite(leds[1], LOW);
-
-	SetDisplayBrightness((byte)light);
-
-	MqttPublish(light, "light", "l");
+  digitalWrite(leds[1], HIGH);
+  
+  SetDisplayBrightness((byte)light);
 }
 
 void SetDisplayBrightness(byte lvl) {

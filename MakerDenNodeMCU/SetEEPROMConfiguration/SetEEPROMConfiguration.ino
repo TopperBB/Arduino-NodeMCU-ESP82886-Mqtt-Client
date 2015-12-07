@@ -5,7 +5,8 @@
 const char* ssid[] = { "NCW", "dgTether" };
 const char* password[] = { "malolos5459", "VisualStudio2005" };
 const char* mqtt = "gloveboxAE.cloudapp.net";
-const char* devid = "ndwhite";
+const char* devid = "node01";
+const char* geo = "-33.8745828,151.2067465";  // Sydney Town Hall
 
 const int BufferLen = 510;  // max eprom length, minus 2 for data length
 char buffer[BufferLen];
@@ -29,9 +30,9 @@ void setup() {
   _password.add(password[0]);
   _password.add(password[1]);
 
-  //root["Password"] = password;
   root["Mqtt"] = mqtt;
   root["DevId"] = devid;
+  root["Geo"] = geo;
   
   length = root.printTo(buffer, BufferLen);
   root.prettyPrintTo(Serial);
@@ -72,6 +73,7 @@ void getconfiguration(){
   password[0] = root["Password"][0];
   mqtt = root["Mqtt"];
   devid = root["DevId"];
+  geo = root["Geo"];
   
   Serial.println(ssid[0]);
   Serial.println(password[0]);
@@ -79,6 +81,7 @@ void getconfiguration(){
   Serial.println(password[1]);
   Serial.println(mqtt);
   Serial.println(devid);
+  Serial.println(geo);
 }
 
 

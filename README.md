@@ -14,7 +14,7 @@ Streams data in the following JSON formats
     {"Dev":"DeviceId","Geo":"2011","Type":"kPa","Unit":"kPa","Val":[101.00,25824],"Utc":"2015-12-06T23:06:19","Id":85}
     {"Dev":"DeviceId","Geo":"2011","Type":"light","Unit":"l","Val":[99.00,25840],"Utc":"2015-12-06T23:06:19","Id":86}
     
-2. Azure IoT Hub Field Gateway. (MQTT Namespace gb/iothub)
+2. Azure IoT Hub Field Gateway. (MQTT Namespace iothub/#)
 
     {"Dev":"DeviceId","Geo":"2011","Celsius":27,"hPa":1016,"Light":99,"Utc":"2015-12-06T23:07:04","Id":103}
 

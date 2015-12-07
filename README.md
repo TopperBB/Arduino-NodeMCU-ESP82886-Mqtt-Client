@@ -31,9 +31,9 @@ Streams data in the following JSON formats
     
 ## Software Requirements
 
-1. On Windows, Mac and Linux you will need to install the latest [CP210x USB to UART Bridge VCP Drivers](https://www.silabs.com/products/mcu/Pages/USBtoUARTBridgeVCPDrivers.aspx)
-2. [Arduino IDE 1.6.5](https://www.arduino.cc/en/Main/Software) As at Nov 27, 2015, version 1.6.6 is not compatible with the ESP8266 SDK
-3. As at Now 27, 2015 to support/compile Adafruit BMP180 library for ESP8266/NodeMCU you need the [libm.a "undefined reference to __ieee754_sqrt. ESP8266 Arduino bug"](http://never-enough-time.com/2015/10/13/undefined-reference-to-__ieee754_sqrt-esp8266-arduino-bug/) library fix
+1. On Windows, Mac and Linux you will need to install the latest [CP210x USB to UART Bridge VCP Drivers](https://www.silabs.com/products/mcu/Pages/USBtoUARTBridgeVCPDrivers.aspx).
+2. [Arduino IDE 1.6.5](https://www.arduino.cc/en/Main/Software) As at Dec, 2015, [Arduino 1.6.6 has several issues, so to stick with 1.6.5](http://esp8266.github.io/Arduino/versions/2.0.0/doc/installing.html)
+3. As at Dec 2015, ESP8266 Board Manager 2.0.0 or better required.
 
 ##Arduino on ESP8266
 [Arduino on ESP8266 Project](https://github.com/esp8266/Arduino)
@@ -42,10 +42,10 @@ Add NodeMCU to Arduino IDE
 
 1. Add Additional Board Manager URLs: File -> Preferences.  Add http://arduino.esp8266.com/stable/package_esp8266com_index.json 
 2. Restart Arduino IDE
-3. Arduino IDE 1.6.6 or greater: Tools -> Board -> Board Manager -> Search ESP8266 -> Install
+3. Add ESP8266 Board: Tools -> Board -> Board Manager -> Search ESP8266 -> Install
 4. Select NodeMUC Board: Tools -> Board -> NodeMCU 1.0 (ESP-12E module)
 5. Set Port and Upload Speed: Tools.  Note, you may need to try different port speeds to sucessfully flash the device. Faster is better as each time you upload the code to the NodeMCU you are uploading the complete ROM not just your code.
-6. Set port and port speed: Adruino IDE: Tools
+
 
 
 ##Project Files

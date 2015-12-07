@@ -50,7 +50,7 @@ Add NodeMCU to Arduino IDE
 
 ##Project Files
 
-1. SetEEPROMConfiguration.ino Set your Wi-Fi SSID and password (up to two can be specified - ground pin 7 to select the second Wi-Fi).  Deploy this app to the NodeMCU to write configuration settings to EPROM
+1. SetEEPROMConfiguration.ino - Set your Wi-Fi SSID and password (up to two can be specified - ground pin 7 to select the second Wi-Fi), plus the device id, MQTT server name, and geo location.  Deploy this app to the NodeMCU to write configuration settings to EPROM
 7. MakerDenNodeMCU.ino - This is the main application, it will read configuration setting from the EPROM, manages sensor readings and publishing to MQTT
 
 ##Subscripting to MQTT Data

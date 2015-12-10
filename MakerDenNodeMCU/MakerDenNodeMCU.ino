@@ -60,6 +60,7 @@ void loop() {
 	if (WiFi.status() == WL_CONNECTED) {
 		if (timeStatus() == timeNotSet) {
       Serial.println(WiFi.localIP());
+      delay(250);
 			setSyncProvider(ntpUnixTime);
 			setSyncInterval(60 * 60);
 		}

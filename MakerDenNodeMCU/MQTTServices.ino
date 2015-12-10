@@ -7,6 +7,7 @@ PubSubClient client(wclient);
 String mqttNamespace = "gb/";
 String mqttIoTHubNamespace = "iothub/";
 
+
 int MqttConnectedLed;
 
 int sendCount = 0;
@@ -49,36 +50,29 @@ void MqttPublish(float temperature, int pressure, int light, const char * geo){
 
   digitalWrite(MqttConnectedLed, LOW); 
 
-
   int length;
-//  const int BUFFER_SIZE = JSON_OBJECT_SIZE(4) + JSON_ARRAY_SIZE(0);
   StaticJsonBuffer<300> jsonBuffer;
   JsonObject& root = jsonBuffer.createObject();
   
   String TopicName = mqttIoTHubNamespace;
   char Topic[50];
   TopicName.toCharArray(Topic, 50, 0);
+
+  Preamble(root);
   
-  root["Dev"] = devid;
-  root["Geo"] = geo;  
   root["Celsius"] = temperature;
   root["hPa"] = pressure;
   root["Light"] = light;
 
-  root["Utc"] = GetISODateTime();
-  root["Id"] = sendCount++;
-  root["WiFi"] = WiFiConnectAttempts;
-  root["Mqtt"] = MQTTConnectionAttempts;
+  Postamble(root);
   
   length = root.printTo(buffer, BufferLen);
   
-  client.publish(Topic, buffer);    //http://knolleary.net/arduino-client-for-mqtt/api/#publish
-  
+  client.publish(Topic, buffer);    //http://knolleary.net/arduino-client-for-mqtt/api/#publish  
 }
 
 
 void MqttPublish(float reading, const char * type, const char * unit, const char * geo) {
-
   if (!client.connected()) { 
     digitalWrite(MqttConnectedLed, HIGH);
     return; 
@@ -87,31 +81,39 @@ void MqttPublish(float reading, const char * type, const char * unit, const char
   digitalWrite(MqttConnectedLed, LOW); 
 
   int length;
-//  const int BUFFER_SIZE = JSON_OBJECT_SIZE(4) + JSON_ARRAY_SIZE(0);
   StaticJsonBuffer<300> jsonBuffer;
   JsonObject& root = jsonBuffer.createObject();
   
   String TopicName = mqttNamespace + (String)type;
   char Topic[50];
-  TopicName.toCharArray(Topic, 50, 0);
-  
-  root["Dev"] = devid;
-  root["Geo"] = geo;  
+  TopicName.toCharArray(Topic, 50, 0);  
+
+  Preamble(root);
+
   root["Type"] = type;
   root["Unit"] = unit;
   
   JsonArray& data = root.createNestedArray("Val");
   data.add(reading, 2);  // 2 is the number of decimals to print 
-  data.add(ESP.getFreeHeap()); 
 
-  root["Utc"] = GetISODateTime();
-  root["Id"] = sendCount++;
-  root["WiFi"] = WiFiConnectAttempts;
-  root["Mqtt"] = MQTTConnectionAttempts;
+  Postamble(root);
   
   length = root.printTo(buffer, BufferLen);
   
   client.publish(Topic, buffer);    //http://knolleary.net/arduino-client-for-mqtt/api/#publish
+}
+
+void Preamble(JsonObject& root){
+  root["Dev"] = devid;
+  root["Utc"] = GetISODateTime();
+}
+
+void Postamble(JsonObject& root){
+  root["Geo"] = geo;  
+  root["WiFi"] = WiFiConnectAttempts;
+  root["Mqtt"] = MQTTConnectionAttempts;
+  root["Mem"] = ESP.getFreeHeap();
+  root["Id"] = sendCount++;
 }
 
 //// Callback function

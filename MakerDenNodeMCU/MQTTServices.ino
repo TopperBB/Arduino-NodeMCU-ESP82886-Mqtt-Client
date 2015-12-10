@@ -31,7 +31,7 @@ bool MqttConnect(){
   {
     Serial.println("mqtt connect");
     client.connect(String(ESP.getChipId()));
-
+    MQTTConnectionAttempts++;
     return client.connected();
   }
 }
@@ -67,6 +67,8 @@ void MqttPublish(float temperature, int pressure, int light, const char * geo){
 
   root["Utc"] = GetISODateTime();
   root["Id"] = sendCount++;
+  root["WiFi"] = WiFiConnectAttempts;
+  root["Mqtt"] = MQTTConnectionAttempts;
   
   length = root.printTo(buffer, BufferLen);
   
@@ -104,6 +106,8 @@ void MqttPublish(float reading, const char * type, const char * unit, const char
 
   root["Utc"] = GetISODateTime();
   root["Id"] = sendCount++;
+  root["WiFi"] = WiFiConnectAttempts;
+  root["Mqtt"] = MQTTConnectionAttempts;
   
   length = root.printTo(buffer, BufferLen);
   

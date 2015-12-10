@@ -14,9 +14,14 @@
 #include <Wire.h>
 #include <Adafruit_BMP085.h>
 
-byte activeWifiConnection = 0;
+// Wifi management variables
 const byte WifiConnections = 2;
-int wifiRetry = 0;
+int WifiIndex = -1;
+unsigned long LastWifiTime = 0;
+const int WifiTimeoutMilliseconds = 60000;  // 60 seconds
+int WiFiConnectAttempts = 0;
+int MQTTConnectionAttempts = 0;
+
 
 const char* ssid[WifiConnections];
 const char* password[WifiConnections];
@@ -35,9 +40,6 @@ enum lights {
 	mqttConnected = D4, Sensing = BUILTIN_LED
 };
 
-enum  inputs {
-	wifiSelector = D7
-};
 
 int leds[] = { mqttConnected, Sensing };
 
@@ -51,40 +53,20 @@ void setup() {
 	MqttInit(leds[0]);
 	MatrixInit();
   bmp.begin();
-
-
-	activeWifiConnection = WifiSelector();
-
-	WiFi.begin(ssid[activeWifiConnection], password[activeWifiConnection]);
-
-	while (WiFi.status() != WL_CONNECTED && wifiRetry < 10) {
-		delay(500);
-		Serial.print(".");
-		wifiRetry++;
-	}
-
-	Serial.println();
-	Serial.println(WiFi.localIP());
 }
 
-void LedsInit() {
-	for (int i; i < (sizeof(leds) / sizeof(int)); i++) {
-		pinMode(leds[i], OUTPUT);
-		digitalWrite(leds[i], LOW);
-	}
-	digitalWrite(leds[0], HIGH);
-}
 
 void loop() {
 	if (WiFi.status() == WL_CONNECTED) {
 		if (timeStatus() == timeNotSet) {
+      Serial.println(WiFi.localIP());
 			setSyncProvider(ntpUnixTime);
 			setSyncInterval(60 * 60);
 		}
 		MqttConnect();
 	}
 	else {
-		delay(1000);
+    InitWifi();
 	}
 
 	GetTempReading();
@@ -95,10 +77,40 @@ void loop() {
 }
 
 
+void LedsInit() {
+  for (int i; i < (sizeof(leds) / sizeof(int)); i++) {
+    pinMode(leds[i], OUTPUT);
+    digitalWrite(leds[i], LOW);
+  }
+  digitalWrite(leds[0], HIGH);
+}
+
+
+void InitWifi(){
+  if (WiFi.status() == WL_CONNECTED) {return;}  
+
+  if (LastWifiTime >  millis() ) {
+    delay(500);    
+    return;
+  }
+  
+  WifiIndex++;
+  if (WifiIndex >= WifiConnections) {WifiIndex = 0;}
+
+  Serial.println("trying " + String(ssid[WifiIndex]));
+
+  WiFi.begin(ssid[WifiIndex], password[WifiIndex]);
+  
+  WiFiConnectAttempts++;
+  LastWifiTime = millis() + WifiTimeoutMilliseconds;
+}
+
+
 // publish data in flattened schema for IoT Hub
 void PublishIoTHub(){
   MqttPublish(temperature, pressure, light, geo);
 }
+
 
 void GetTempReading() {
 	digitalWrite(leds[1], LOW);
@@ -107,7 +119,7 @@ void GetTempReading() {
 	MqttPublish(temperature, "temp", "c", geo);
 
   pressure = (int)((int)( bmp.readPressure() + 0.5) / 100);
-  MqttPublish(pressure / 10, "kPa", "kPa", geo);
+  MqttPublish(pressure, "hPa", "hPa", geo);
   
   digitalWrite(leds[1], HIGH);
 
@@ -115,6 +127,7 @@ void GetTempReading() {
   
   ScrollString(" " + String(roundedTemp) + "C " + String(pressure) + "hPa", 71); 
 }
+
 
 void GetLightReading() {
 	digitalWrite(leds[1], LOW);
@@ -128,15 +141,12 @@ void GetLightReading() {
   SetDisplayBrightness((byte)light);
 }
 
+
 void SetDisplayBrightness(byte lvl) {
 	lvl = (lvl % 100) / 15;
 	SetBrightness(lvl);
 }
 
-byte WifiSelector() {
-	pinMode(wifiSelector, INPUT);
-	return !digitalRead(wifiSelector);
-}
 
 
 

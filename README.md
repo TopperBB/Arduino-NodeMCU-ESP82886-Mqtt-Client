@@ -1,4 +1,4 @@
-# Temperature, Pressure and Light Sensor Streaming over MQTT
+# Temperature, Pressure and Light Sensor Streaming over MQTT and to Azure Event Hub over HTTPS/REST
 
 ## Platform
 
@@ -15,6 +15,10 @@ Streams data in the following JSON formats
     {"Dev":"DeviceId","Geo":"2011","Type":"light","Unit":"l","Val":[99.00,25840],"Utc":"2015-12-06T23:06:19","Id":86}
     
 2. Azure IoT Hub Field Gateway. (MQTT Namespace iothub/#)
+
+    {"Dev":"DeviceId","Geo":"2011","Celsius":27,"hPa":1016,"Light":99,"Utc":"2015-12-06T23:07:04","Id":103}
+    
+3. Azure Event Hub over HTTPS/REST
 
     {"Dev":"DeviceId","Geo":"2011","Celsius":27,"hPa":1016,"Light":99,"Utc":"2015-12-06T23:07:04","Id":103}
 

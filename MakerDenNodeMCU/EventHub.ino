@@ -60,7 +60,7 @@ String CreateSas(String url){
   
   // Naive URL encode
   encodedSas.replace("=", "%3D");
-//  Serial.println(encodedSas);
+  // Serial.println(encodedSas);
   
   // END: Get base64 of signature
 

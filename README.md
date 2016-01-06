@@ -56,7 +56,7 @@ Add NodeMCU to Arduino IDE
 
 1. SetEEPROMConfiguration.ino.  
 Set 
-  * Wi-Fi SSID and password, up to three Wi-Fi/Password pairs must be specified, just repeat Wi-Fi access points if less than three, put in priority order, 
+  * Wi-Fi SSID and password, up to three Wi-Fi/Password pairs must be specified, just repeat Wi-Fi access points if less than three, put in priority order.
   * Device id, MQTT server name, and geo location.  
   * Deploy this app to the NodeMCU to write configuration settings to EPROM
 2. MakerDenNodeMCU.ino - This is the main application, it will read configuration setting from the EPROM, manages sensor readings and publishing to MQTT

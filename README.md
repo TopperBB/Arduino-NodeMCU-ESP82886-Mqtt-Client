@@ -1,4 +1,4 @@
-# Temperature, Pressure and Light Sensor Streaming over MQTT and to Azure Event Hub over HTTPS/REST
+# Temperature, Pressure and Light Sensor Streaming over MQTT.
 
 ## Platform
 
